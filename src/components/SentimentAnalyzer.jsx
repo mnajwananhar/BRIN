@@ -26,7 +26,7 @@ export default function SentimentAnalyzer() {
 
   const loadDatabaseStats = async () => {
     try {
-      const response = await fetch('/api/sentiment-stats')
+      const response = await fetch(`${import.meta.env.VITE_API_URL}/api/sentiment-stats`)
       if (response.ok) {
         const data = await response.json()
         setDatabaseStats(data)
@@ -39,7 +39,7 @@ export default function SentimentAnalyzer() {
 
   const saveToDatabase = async (sentimentData) => {
     try {
-      const response = await fetch('/api/save-sentiment', {
+      const response = await fetch(`${import.meta.env.VITE_API_URL}/api/save-sentiment`, {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
@@ -73,7 +73,7 @@ export default function SentimentAnalyzer() {
     setLoading(true)
     try {
       // Call external sentiment API
-      const response = await fetch('/sentiment-api/predict', {
+      const response = await fetch(`${import.meta.env.VITE_API_URL}/predict`, {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
@@ -128,7 +128,7 @@ export default function SentimentAnalyzer() {
     setLoading(true)
     try {
       // Call external batch API
-      const response = await fetch('/sentiment-api/batch_predict', {
+      const response = await fetch(`${import.meta.env.VITE_API_URL}/batch_predict`, {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
@@ -181,7 +181,7 @@ export default function SentimentAnalyzer() {
     }
 
     try {
-      const response = await fetch('/api/clear-data', {
+      const response = await fetch(`${import.meta.env.VITE_API_URL}/api/clear-data`, {
         method: 'DELETE'
       })
 
