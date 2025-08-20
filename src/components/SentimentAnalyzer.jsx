@@ -72,8 +72,8 @@ export default function SentimentAnalyzer() {
 
     setLoading(true)
     try {
-      // Call external sentiment API
-      const response = await fetch(`${import.meta.env.VITE_ML_API_URL}/predict`, {
+      // Call sentiment API via backend proxy
+      const response = await fetch(`${import.meta.env.VITE_API_URL}/api/predict`, {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
@@ -127,8 +127,8 @@ export default function SentimentAnalyzer() {
 
     setLoading(true)
     try {
-      // Call external batch API
-      const response = await fetch(`${import.meta.env.VITE_ML_API_URL}/batch_predict`, {
+      // Call batch API via backend proxy
+      const response = await fetch(`${import.meta.env.VITE_API_URL}/api/batch_predict`, {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
