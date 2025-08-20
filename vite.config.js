@@ -8,7 +8,7 @@ export default defineConfig({
     proxy: {
       // Proxy API calls to external sentiment API
       '/sentiment-api': {
-        target: 'https://sentiment-api1.onrender.com',
+        target: 'https://sentiment-4c5g.onrender.com',
         changeOrigin: true,
         secure: true,
         rewrite: (path) => path.replace(/^\/sentiment-api/, ''),
@@ -31,4 +31,5 @@ export default defineConfig({
       }
     }
   }
+
 })
