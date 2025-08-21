@@ -51,7 +51,7 @@ export default function SentimentAnalyzer() {
   const loadDatabaseStats = async () => {
     try {
       const apiUrl = import.meta.env.VITE_API_URL || '/api'
-      const response = await fetch(`${apiUrl}/sentiment-stats`)
+      const response = await fetch(`${apiUrl}/api/sentiment-stats`)
       if (response.ok) {
         const data = await response.json()
         setDatabaseStats(data)
@@ -65,7 +65,7 @@ export default function SentimentAnalyzer() {
   const saveToDatabase = async (sentimentData) => {
     try {
       const apiUrl = import.meta.env.VITE_API_URL || '/api'
-      const response = await fetch(`${apiUrl}/save-sentiment`, {
+      const response = await fetch(`${apiUrl}/api/save-sentiment`, {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
@@ -99,7 +99,7 @@ export default function SentimentAnalyzer() {
     try {
       // Call sentiment API via backend proxy
       const apiUrl = import.meta.env.VITE_API_URL || '/api'
-      const response = await fetch(`${apiUrl}/predict`, {
+      const response = await fetch(`${apiUrl}/api/predict`, {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
@@ -155,7 +155,7 @@ export default function SentimentAnalyzer() {
     try {
       // Call batch API via backend proxy
       const apiUrl = import.meta.env.VITE_API_URL || '/api'
-      const response = await fetch(`${apiUrl}/batch_predict`, {
+      const response = await fetch(`${apiUrl}/api/batch_predict`, {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
@@ -209,7 +209,7 @@ export default function SentimentAnalyzer() {
 
     try {
       const apiUrl = import.meta.env.VITE_API_URL || '/api'
-      const response = await fetch(`${apiUrl}/clear-data`, {
+      const response = await fetch(`${apiUrl}/api/clear-data`, {
         method: 'DELETE'
       })
 
