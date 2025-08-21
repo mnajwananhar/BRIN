@@ -28,19 +28,15 @@ export default function SentimentAnalyzer() {
 
   const loadDatabaseStats = async () => {
     try {
-      console.log('🚨 LOADING DATABASE STATS...')
       const apiUrl = import.meta.env.VITE_API_URL || '/api'
       const response = await fetch(`${apiUrl}/api/sentiment-stats`)
-      console.log('🚨 Database stats response:', response.status)
       if (response.ok) {
         const data = await response.json()
-        console.log('🚨 New database stats received:', data)
         setDatabaseStats(data)
         setRecentEntries(data.recent_entries || [])
-        console.log('🚨 Database stats state updated!')
       }
     } catch (error) {
-      console.error('🚨 Error loading database stats:', error)
+      console.error('Error loading database stats:', error)
     }
   }
 
@@ -103,9 +99,7 @@ export default function SentimentAnalyzer() {
       const saved = await saveToDatabase(data)
       
       // Refresh database stats after successful analysis
-      console.log('🚨 REFRESHING DATABASE STATS AFTER ANALYSIS...')
       await loadDatabaseStats()
-      console.log('🚨 DATABASE STATS REFRESH COMPLETE!')
       
       toast({
         title: 'Analysis Complete',
