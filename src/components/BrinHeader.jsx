@@ -30,7 +30,6 @@ function BrinHeader({ onNavigate, activeSection }) {
                   className="w-12 h-12 object-contain"
                   onError={(e) => {
                     e.target.style.display = 'none';
-                    e.target.nextElementSibling.style.display = 'flex';
                   }}
                 />
       
