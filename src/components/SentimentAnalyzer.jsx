@@ -1,4 +1,4 @@
-import { useState, useEffect } from 'react'
+import { useState, useEffect, useCallback } from 'react'
 import { Button } from './ui/Button'
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from './ui/Card'
 import { Textarea } from './ui/Textarea'
@@ -20,8 +20,8 @@ export default function SentimentAnalyzer() {
   const [recentEntries, setRecentEntries] = useState([])
   const { toast } = useToast()
 
-  // Real-time data update handler
-  const handleDataUpdate = (data) => {
+  // Real-time data update handler (memoized to prevent infinite re-renders)
+  const handleDataUpdate = useCallback((data) => {
     console.log('📊 Updating UI with real-time data');
     setDatabaseStats({
       success: true,
@@ -38,7 +38,7 @@ export default function SentimentAnalyzer() {
       description: 'Statistics updated in real-time',
       duration: 2000,
     });
-  };
+  }, [toast]);
 
   // Initialize Socket.IO connection
   useSocket(handleDataUpdate);

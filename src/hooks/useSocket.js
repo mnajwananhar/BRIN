@@ -45,7 +45,7 @@ export const useSocket = (onDataUpdate) => {
         socket.disconnect();
       }
     };
-  }, [onDataUpdate]);
+  }, []); // Remove onDataUpdate dependency to prevent infinite re-renders
   
   return socketRef.current;
 };
