@@ -22,14 +22,19 @@ export default function SentimentAnalyzer() {
 
   // Real-time data update handler (memoized to prevent infinite re-renders)
   const handleDataUpdate = useCallback((data) => {
-    console.log('📊 Updating UI with real-time data');
-    setDatabaseStats({
+    console.log('🚨 REAL-TIME UPDATE RECEIVED!', data);
+    console.log('🚨 Current databaseStats before update:', databaseStats);
+    
+    const newStats = {
       success: true,
       statistics: data.statistics,
       chart_data: data.chart_data,
       recent_entries: data.recent_entries,
       database_info: data.database_info
-    });
+    };
+    
+    console.log('🚨 Setting new stats:', newStats);
+    setDatabaseStats(newStats);
     setRecentEntries(data.recent_entries || []);
     
     // Show toast notification
@@ -38,7 +43,9 @@ export default function SentimentAnalyzer() {
       description: 'Statistics updated in real-time',
       duration: 2000,
     });
-  }, [toast]);
+    
+    console.log('🚨 REAL-TIME UPDATE COMPLETE!');
+  }, [toast, databaseStats]);
 
   // Initialize Socket.IO connection
   useSocket(handleDataUpdate);

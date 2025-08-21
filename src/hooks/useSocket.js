@@ -35,9 +35,13 @@ export const useSocket = (onDataUpdate) => {
     
     // Listen for data updates using ref to always get latest function
     socket.on('data-updated', (data) => {
-      console.log('📡 Received real-time update');
+      console.log('🚨🚨🚨 SOCKET EVENT RECEIVED: data-updated', data);
+      console.log('🚨 onDataUpdateRef.current exists?', !!onDataUpdateRef.current);
       if (onDataUpdateRef.current) {
+        console.log('🚨 CALLING onDataUpdate function...');
         onDataUpdateRef.current(data);
+      } else {
+        console.error('🚨 onDataUpdateRef.current is null!');
       }
     });
     
