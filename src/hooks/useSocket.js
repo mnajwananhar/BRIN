@@ -3,6 +3,12 @@ import { io } from 'socket.io-client';
 
 export const useSocket = (onDataUpdate) => {
   const socketRef = useRef(null);
+  const onDataUpdateRef = useRef(onDataUpdate);
+  
+  // Keep the latest onDataUpdate function reference
+  useEffect(() => {
+    onDataUpdateRef.current = onDataUpdate;
+  }, [onDataUpdate]);
   
   useEffect(() => {
     // Create socket connection
@@ -27,11 +33,11 @@ export const useSocket = (onDataUpdate) => {
       console.error('❌ Socket connection error:', error);
     });
     
-    // Listen for data updates
+    // Listen for data updates using ref to always get latest function
     socket.on('data-updated', (data) => {
       console.log('📡 Received real-time update');
-      if (onDataUpdate) {
-        onDataUpdate(data);
+      if (onDataUpdateRef.current) {
+        onDataUpdateRef.current(data);
       }
     });
     
@@ -45,7 +51,7 @@ export const useSocket = (onDataUpdate) => {
         socket.disconnect();
       }
     };
-  }, []); // Remove onDataUpdate dependency to prevent infinite re-renders
+  }, []); // No dependencies to prevent re-connections
   
   return socketRef.current;
 };
