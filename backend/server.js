@@ -23,7 +23,12 @@ const __dirname = path.dirname(__filename);
 const app = express();
 const PORT = 3001;
 
-app.use(cors());
+app.use(cors({
+  origin: process.env.NODE_ENV === 'production' 
+    ? ['https://your-vercel-app.vercel.app'] // Replace with your actual Vercel URL
+    : ['http://localhost:5173', 'http://localhost:3000'],
+  credentials: true
+}));
 app.use(express.json());
 
 // Initialize PostgreSQL database
@@ -171,6 +176,58 @@ app.get('/api/chart-data', async (req, res) => {
     res.status(500).json({
       success: false,
       error: 'Failed to retrieve chart data'
+    });
+  }
+});
+
+// Proxy to external sentiment API
+app.post('/api/predict', async (req, res) => {
+  try {
+    const response = await fetch('https://sentiment-4c5g.onrender.com/predict', {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify(req.body),
+    });
+
+    if (!response.ok) {
+      throw new Error(`ML API responded with status ${response.status}`);
+    }
+
+    const data = await response.json();
+    res.json(data);
+  } catch (error) {
+    console.error('Error calling ML API:', error);
+    res.status(500).json({
+      error: 'Failed to connect to ML API',
+      message: error.message
+    });
+  }
+});
+
+// Proxy to external sentiment API for batch predictions
+app.post('/api/batch_predict', async (req, res) => {
+  try {
+    const response = await fetch('https://sentiment-4c5g.onrender.com/batch_predict', {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify(req.body),
+    });
+
+    if (!response.ok) {
+      throw new Error(`ML API responded with status ${response.status}`);
+    }
+
+    const data = await response.json();
+    res.json(data);
+  } catch (error) {
+    console.error('Error calling ML API:', error);
+    res.status(500).json({
+      error: 'Failed to connect to ML API',
+      message: error.message
     });
   }
 });

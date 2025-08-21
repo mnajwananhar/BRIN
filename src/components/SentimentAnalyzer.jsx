@@ -26,7 +26,8 @@ export default function SentimentAnalyzer() {
 
   const loadDatabaseStats = async () => {
     try {
-      const response = await fetch(`${import.meta.env.VITE_API_URL}/api/sentiment-stats`)
+      const apiUrl = import.meta.env.VITE_API_URL || '/api'
+      const response = await fetch(`${apiUrl}/sentiment-stats`)
       if (response.ok) {
         const data = await response.json()
         setDatabaseStats(data)
@@ -39,7 +40,8 @@ export default function SentimentAnalyzer() {
 
   const saveToDatabase = async (sentimentData) => {
     try {
-      const response = await fetch(`${import.meta.env.VITE_API_URL}/api/save-sentiment`, {
+      const apiUrl = import.meta.env.VITE_API_URL || '/api'
+      const response = await fetch(`${apiUrl}/save-sentiment`, {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
@@ -73,7 +75,8 @@ export default function SentimentAnalyzer() {
     setLoading(true)
     try {
       // Call sentiment API via backend proxy
-      const response = await fetch(`${import.meta.env.VITE_API_URL}/api/predict`, {
+      const apiUrl = import.meta.env.VITE_API_URL || '/api'
+      const response = await fetch(`${apiUrl}/predict`, {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
@@ -128,7 +131,8 @@ export default function SentimentAnalyzer() {
     setLoading(true)
     try {
       // Call batch API via backend proxy
-      const response = await fetch(`${import.meta.env.VITE_API_URL}/api/batch_predict`, {
+      const apiUrl = import.meta.env.VITE_API_URL || '/api'
+      const response = await fetch(`${apiUrl}/batch_predict`, {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
@@ -181,7 +185,8 @@ export default function SentimentAnalyzer() {
     }
 
     try {
-      const response = await fetch(`${import.meta.env.VITE_API_URL}/api/clear-data`, {
+      const apiUrl = import.meta.env.VITE_API_URL || '/api'
+      const response = await fetch(`${apiUrl}/clear-data`, {
         method: 'DELETE'
       })
 

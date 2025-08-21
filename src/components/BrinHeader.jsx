@@ -1,5 +1,6 @@
 import React, { useState } from 'react';
 import { Menu, X, Car, Brain, Target } from 'lucide-react';
+import brinLogo from '../assets/brin-logo.png';
 
 function BrinHeader({ onNavigate, activeSection }) {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
@@ -24,7 +25,7 @@ function BrinHeader({ onNavigate, activeSection }) {
             <div className="flex items-center">
               <div className="w-12 h-12 flex items-center justify-center">
                 <img 
-                  src="/src/assets/brin-logo.png" 
+                  src={brinLogo} 
                   alt="BRIN Logo" 
                   className="w-12 h-12 object-contain"
                   onError={(e) => {
