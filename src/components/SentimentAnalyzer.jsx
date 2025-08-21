@@ -6,6 +6,7 @@ import { Badge } from './ui/Badge'
 import { Progress } from './ui/Progress'
 import { Loader2, Brain, TrendingUp, TrendingDown, Minus, Database, BarChart3, Trash2 } from 'lucide-react'
 import { useToast } from '../hooks/useToast'
+import { useSocket } from '../hooks/useSocket'
 import { PieChart, Pie, Cell, ResponsiveContainer, Legend, Tooltip } from 'recharts'
 
 export default function SentimentAnalyzer() {
@@ -18,6 +19,29 @@ export default function SentimentAnalyzer() {
   const [databaseStats, setDatabaseStats] = useState(null)
   const [recentEntries, setRecentEntries] = useState([])
   const { toast } = useToast()
+
+  // Real-time data update handler
+  const handleDataUpdate = (data) => {
+    console.log('📊 Updating UI with real-time data');
+    setDatabaseStats({
+      success: true,
+      statistics: data.statistics,
+      chart_data: data.chart_data,
+      recent_entries: data.recent_entries,
+      database_info: data.database_info
+    });
+    setRecentEntries(data.recent_entries || []);
+    
+    // Show toast notification
+    toast({
+      title: 'Data Updated',
+      description: 'Statistics updated in real-time',
+      duration: 2000,
+    });
+  };
+
+  // Initialize Socket.IO connection
+  useSocket(handleDataUpdate);
 
   // Load database statistics when component mounts
   useEffect(() => {
@@ -52,8 +76,7 @@ export default function SentimentAnalyzer() {
       if (response.ok) {
         const saveResult = await response.json()
         console.log('✅ Data saved to database:', saveResult.data.id)
-        // Reload stats after saving
-        loadDatabaseStats()
+        // Real-time update will be handled by Socket.IO
         return true
       }
     } catch (error) {
