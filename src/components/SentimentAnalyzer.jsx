@@ -6,7 +6,6 @@ import { Badge } from './ui/Badge'
 import { Progress } from './ui/Progress'
 import { Loader2, Brain, TrendingUp, TrendingDown, Minus, Database, BarChart3, Trash2 } from 'lucide-react'
 import { useToast } from '../hooks/useToast'
-import { useSocket } from '../hooks/useSocket'
 import { PieChart, Pie, Cell, ResponsiveContainer, Legend, Tooltip } from 'recharts'
 
 export default function SentimentAnalyzer() {
@@ -20,35 +19,7 @@ export default function SentimentAnalyzer() {
   const [recentEntries, setRecentEntries] = useState([])
   const { toast } = useToast()
 
-  // Real-time data update handler (memoized to prevent infinite re-renders)
-  const handleDataUpdate = useCallback((data) => {
-    console.log('🚨 REAL-TIME UPDATE RECEIVED!', data);
-    console.log('🚨 Current databaseStats before update:', databaseStats);
-    
-    const newStats = {
-      success: true,
-      statistics: data.statistics,
-      chart_data: data.chart_data,
-      recent_entries: data.recent_entries,
-      database_info: data.database_info
-    };
-    
-    console.log('🚨 Setting new stats:', newStats);
-    setDatabaseStats(newStats);
-    setRecentEntries(data.recent_entries || []);
-    
-    // Show toast notification
-    toast({
-      title: 'Data Updated',
-      description: 'Statistics updated in real-time',
-      duration: 2000,
-    });
-    
-    console.log('🚨 REAL-TIME UPDATE COMPLETE!');
-  }, [toast, databaseStats]);
-
-  // Initialize Socket.IO connection
-  useSocket(handleDataUpdate);
+  // Simple refresh approach - no Socket.IO complexity needed
 
   // Load database statistics when component mounts
   useEffect(() => {
@@ -127,6 +98,9 @@ export default function SentimentAnalyzer() {
       // Save to local database
       const saved = await saveToDatabase(data)
       
+      // Refresh database stats after successful analysis
+      await loadDatabaseStats()
+      
       toast({
         title: 'Analysis Complete',
         description: `Sentiment: ${data.predicted_class} (${(data.confidence * 100).toFixed(1)}% confidence)${saved ? ' - Saved to database' : ''}`,
@@ -189,6 +163,9 @@ export default function SentimentAnalyzer() {
         }
       }
 
+      // Refresh database stats after successful batch analysis
+      await loadDatabaseStats()
+
       toast({
         title: 'Batch Analysis Complete',
         description: `Analyzed ${data.total_processed} texts, saved ${savedCount} to database`,
@@ -221,8 +198,9 @@ export default function SentimentAnalyzer() {
       })
 
       if (response.ok) {
-        setDatabaseStats(null)
-        setRecentEntries([])
+        // Refresh database stats after clearing
+        await loadDatabaseStats()
+        
         toast({
           title: 'Database Cleared',
           description: 'All sentiment data has been removed from the database',
