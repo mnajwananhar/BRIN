@@ -87,7 +87,9 @@ function HeroSection({ onNavigateToAnalyzer }) {
                     className="w-32 h-32 object-contain"
                     onError={(e) => {
                       e.target.style.display = 'none';
-                      e.target.nextElementSibling.style.display = 'block';
+                      if (e.target.nextElementSibling) {
+                        e.target.nextElementSibling.style.display = 'block';
+                      }
                     }}
                   />
                   <Brain className="w-32 h-32 text-red-600 hidden" />

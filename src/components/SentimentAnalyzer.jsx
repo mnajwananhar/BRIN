@@ -17,6 +17,7 @@ export default function SentimentAnalyzer() {
   const [activeTab, setActiveTab] = useState('single')
   const [databaseStats, setDatabaseStats] = useState(null)
   const [recentEntries, setRecentEntries] = useState([])
+  const [lastRequestTime, setLastRequestTime] = useState(0)
   const { toast } = useToast()
 
   // Simple refresh approach - no Socket.IO complexity needed
@@ -73,6 +74,18 @@ export default function SentimentAnalyzer() {
       return
     }
 
+    // Rate limiting: prevent requests within 2 seconds of each other
+    const now = Date.now()
+    if (now - lastRequestTime < 2000) {
+      toast({
+        title: 'Please wait',
+        description: 'Please wait a moment before making another request',
+        variant: 'destructive',
+      })
+      return
+    }
+    setLastRequestTime(now)
+
     setLoading(true)
     try {
       // Call sentiment API via backend proxy
@@ -83,7 +96,7 @@ export default function SentimentAnalyzer() {
           'Content-Type': 'application/json',
         },
         body: JSON.stringify({
-          text: text.trim(),
+          text: text.trim().replace(/\\/g, ''), // Remove any backslashes that might cause escape issues
         }),
       })
 
@@ -122,7 +135,9 @@ export default function SentimentAnalyzer() {
   }
 
   const analyzeBatch = async () => {
-    const texts = batchTexts.split('\n').filter((t) => t.trim())
+    const texts = batchTexts.split('\n')
+      .filter((t) => t.trim())
+      .map(t => t.trim().replace(/\\/g, '')) // Remove backslashes from each text
     if (texts.length === 0) {
       toast({
         title: 'Error',
